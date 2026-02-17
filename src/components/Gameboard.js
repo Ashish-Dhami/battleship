@@ -20,6 +20,10 @@ export default class Gameboard {
     this.ships = []
   }
 
+  get size() {
+    return this.#size
+  }
+
   #createBoard() {
     return Array.from({ length: this.#size }, () =>
       Array.from({ length: this.#size }, () => ({
@@ -87,11 +91,15 @@ export default class Gameboard {
   }
 
   receiveAttack({ row, col }) {
-    if (!this.value[row]?.[col]) return
-    this.value[row][col].hit = true
-    if (this.value[row][col].ship) {
-      this.value[row][col].ship.hit()
+    const cell = this.value[row]?.[col]
+    if (!cell) return
+    if (cell.hit) return
+    cell.hit = true
+    if (cell.ship) {
+      cell.ship.hit()
+      return { status: 'hit' }
     }
+    return { status: 'miss' }
   }
 
   allSunk() {

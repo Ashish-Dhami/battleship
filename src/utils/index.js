@@ -16,3 +16,7 @@ export function calcAlign(board, row, col) {
   if (bottom) return 'v'
   return 'h'
 }
+
+export function delay(ms) {
+  return new Promise((res) => setTimeout(res, ms))
+}

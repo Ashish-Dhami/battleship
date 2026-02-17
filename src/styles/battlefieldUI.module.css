@@ -129,3 +129,9 @@
   cursor: pointer;
   z-index: 2;
 }
+
+.battlefield_cell__miss,
+.battlefield_cell__hit,
+.battlefield_cell__done {
+  pointer-events: none;
+}
