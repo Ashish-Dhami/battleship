@@ -1,4 +1,5 @@
 import 'Styles/global.css'
+import * as bfStyles from 'Styles/battlefieldUI.module.css'
 import { RivalPlayer, SelfPlayer, Game } from 'Components'
 import { delay } from 'Utils'
 
@@ -9,8 +10,8 @@ function createPlayers() {
   return { self, rival }
 }
 
-const selfTable = document.querySelector('.battlefield_self tbody')
-const rivalTable = document.querySelector('.battlefield_rival tbody')
+const selfTable = document.querySelector('.battlefield_self .battlefield_table')
+const rivalTable = document.querySelector('.battlefield_rival .battlefield_table')
 
 const { self, rival } = createPlayers()
 const game = new Game(self, rival)
@@ -48,7 +49,7 @@ async function computerTurn() {
 
 rivalTable.addEventListener('click', (e) => {
   if (game.activePlayer !== self) return
-  const cellEl = e.target.closest('.battlefield_cell__content')
+  const cellEl = e.target.closest(`.${bfStyles.battlefield_cell__content}`)
   if (!cellEl) return
   const row = Number(cellEl.dataset.row)
   const col = Number(cellEl.dataset.col)

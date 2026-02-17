@@ -107,14 +107,12 @@
   background: silver;
 }
 
-/** webpack will hash this class on config change */
-.battlefield_rival .battlefield_cell__empty:hover .battlefield_cell__content {
+:global(.battlefield_rival) .battlefield_cell__empty:hover .battlefield_cell__content {
   cursor: pointer;
   position: relative;
 }
 
-/** webpack will hash this class on config change */
-.battlefield_rival .battlefield_cell__empty:hover .battlefield_cell__content::after {
+:global(.battlefield_rival) .battlefield_cell__empty:hover .battlefield_cell__content::after {
   box-sizing: content-box;
   border: 2px solid #40bf44;
   background: rgba(64, 191, 68, 0.05);

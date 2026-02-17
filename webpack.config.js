@@ -36,7 +36,7 @@ export default (_, argv) => ({
             loader: 'css-loader',
             options: {
               modules: {
-                localIdentName: argv.mode === 'development' ? '[local]' : '[hash:base64:6]',
+                localIdentName: argv.mode === 'development' ? '[path][name]__[local]' : '[hash:base64:6]',
               },
             },
           },

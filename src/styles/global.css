@@ -54,12 +54,11 @@ header {
   border-spacing: 0;
 }
 
-.battlefield_table__disabled {
+.battlefield_table__disabled tbody {
   opacity: 0.4;
   pointer-events: none;
 
-  & .battlefield_cell {
-    /** webpack will hash this class on config change */
+  & td {
     border: 1px solid rgba(180, 180, 255, 0.5);
   }
 }

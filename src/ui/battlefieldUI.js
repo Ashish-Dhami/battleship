@@ -3,7 +3,7 @@ import { isOrigin, calcAlign } from 'Utils'
 
 export function renderBoard(container, board, showShips) {
   container.textContent = ''
-  const frag = document.createDocumentFragment()
+  const tbody = document.createElement('tbody')
   for (let i = 0; i < board.length; i++) {
     const tr = document.createElement('tr')
     tr.classList.add('battlefield_row')
@@ -54,9 +54,9 @@ export function renderBoard(container, board, showShips) {
       td.appendChild(div)
       tr.appendChild(td)
     }
-    frag.appendChild(tr)
+    tbody.appendChild(tr)
   }
-  container.appendChild(frag)
+  container.appendChild(tbody)
 }
 
 export function showNotification() {}
