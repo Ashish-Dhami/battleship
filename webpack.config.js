@@ -13,7 +13,10 @@ export default (_, argv) => ({
     alias: {
       Assets: path.resolve(import.meta.dirname, 'assets'),
       Components: path.resolve(import.meta.dirname, 'src/components'),
-      Services: path.resolve(import.meta.dirname, 'src/services'),
+      Modules: path.resolve(import.meta.dirname, 'src/modules'),
+      UI: path.resolve(import.meta.dirname, 'src/ui'),
+      Styles: path.resolve(import.meta.dirname, 'src/styles'),
+      Utils: path.resolve(import.meta.dirname, 'src/utils'),
     },
     extensions: ['.js', '...'],
     mainFiles: ['index'],
@@ -32,7 +35,9 @@ export default (_, argv) => ({
           {
             loader: 'css-loader',
             options: {
-              modules: true,
+              modules: {
+                localIdentName: argv.mode === 'development' ? '[local]' : '[hash:base64:6]',
+              },
             },
           },
         ],

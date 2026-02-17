@@ -5,11 +5,11 @@ export default class Ship {
   }
 
   hit() {
-    if (!this.isSunk) this.hits++
+    if (!this.isSunk()) this.hits++
     return this
   }
 
   isSunk() {
-    return this.hits === this.len
+    return this.hits >= this.len
   }
 }

@@ -1,0 +1,129 @@
+.battlefield_cell {
+  border: 1px solid #b4b4ff;
+  padding: 0;
+}
+
+.battlefield_cell__busy {
+  border-color: rgba(0, 0, 255, 0.1);
+}
+
+.battlefield_cell__content {
+  position: relative;
+  height: 2.125rem;
+  width: 2.125rem;
+}
+
+.shipBox {
+  box-sizing: content-box;
+  z-index: 2;
+  left: 0;
+  top: 0;
+  border: 2px solid #00f;
+  background: rgba(0, 0, 255, 0.05);
+  position: absolute;
+  margin: -2px;
+}
+
+.battlefield_cell__done .battlefield_cell__content::after {
+  box-sizing: content-box;
+  content: '';
+  display: block;
+  height: 2.125rem;
+  width: 2.125rem;
+  border: 1px solid red;
+  margin: -1px;
+  position: absolute;
+  z-index: 3;
+  top: 0;
+  left: 0;
+}
+
+.battlefield_cell__done .shipBox {
+  border-color: red;
+  background: rgba(255, 0, 0, 0.05);
+}
+
+.battlefield_cell__hit .battlefield_cell__content {
+  background: 0 0;
+  position: relative;
+}
+
+.battlefield_cell__hit .battlefield_cell__content .z {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.battlefield_cell__hit .battlefield_cell__content .z::after,
+.battlefield_cell__hit .battlefield_cell__content .z::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  background: red;
+  -webkit-transform: rotate(-45deg);
+  -moz-transform: rotate(-45deg);
+  -ms-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+}
+
+.battlefield_cell__hit .battlefield_cell__content .z::before {
+  left: 50%;
+  width: 2px;
+  top: -25%;
+  height: 150%;
+  margin-top: 1px;
+}
+
+.battlefield_cell__hit .battlefield_cell__content .z::after {
+  top: 50%;
+  height: 2px;
+  left: -25%;
+  width: 150%;
+  margin-left: -1px;
+}
+
+.battlefield_cell__miss .battlefield_cell__content {
+  background: #f2f4f8;
+}
+
+.battlefield_cell__miss .battlefield_cell__content .z {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  height: 4px;
+  width: 4px;
+  background: #333;
+  border-radius: 50%;
+  margin-top: -2px;
+  margin-left: -2px;
+}
+
+.battlefield_cell__miss__auto .battlefield_cell__content .z {
+  background: silver;
+}
+
+.battlefield_rival .battlefield_cell__empty:hover .battlefield_cell__content {
+  cursor: pointer;
+  position: relative;
+}
+
+.battlefield_rival .battlefield_cell__empty:hover .battlefield_cell__content::after {
+  box-sizing: content-box;
+  border: 2px solid #40bf44;
+  background: rgba(64, 191, 68, 0.05);
+  position: absolute;
+  width: 2.125rem;
+  height: 2.125rem;
+  top: 0;
+  left: 0;
+  margin: -2px;
+  content: '';
+  display: block;
+  cursor: pointer;
+  z-index: 2;
+}

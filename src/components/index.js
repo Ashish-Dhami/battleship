@@ -1,6 +1,7 @@
 import Gameboard from 'Components/Gameboard'
-import RealPlayer from 'Components/RealPlayer'
-import BotPlayer from 'Components/BotPlayer'
+import SelfPlayer from 'Components/SelfPlayer'
+import RivalPlayer from 'Components/RivalPlayer'
 import Ship from 'Components/Ship'
+import Game from 'Components/Game'
 
-export { Gameboard, RealPlayer, BotPlayer, Ship }
+export { Gameboard, SelfPlayer, RivalPlayer, Ship, Game }

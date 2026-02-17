@@ -25,6 +25,7 @@ export default [
       'no-param-reassign': ['error', { props: false }],
       'no-console': ['error', { allow: ['error'] }],
       'no-plusplus': 'off',
+      'no-restricted-syntax': 'off',
     },
     settings: {
       'import/resolver': {
