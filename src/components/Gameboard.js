@@ -87,6 +87,7 @@ export default class Gameboard {
   }
 
   receiveAttack({ row, col }) {
+    if (!this.value[row]?.[col]) return
     this.value[row][col].hit = true
     if (this.value[row][col].ship) {
       this.value[row][col].ship.hit()
