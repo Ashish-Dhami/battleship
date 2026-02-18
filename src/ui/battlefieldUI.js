@@ -1,6 +1,21 @@
 import * as styles from 'Styles/battlefieldUI.module.css'
 import { isOrigin, calcAlign } from 'Utils'
 
+function appendMarkers(container, row, col) {
+  if (col === 0) {
+    const markerRow = document.createElement('div')
+    markerRow.classList.add(styles.marker, styles.marker__row)
+    markerRow.textContent = row + 1
+    container.appendChild(markerRow)
+  }
+  if (row === 0) {
+    const markerCol = document.createElement('div')
+    markerCol.classList.add(styles.marker, styles.marker__col)
+    markerCol.textContent = String.fromCharCode(65 + col)
+    container.appendChild(markerCol)
+  }
+}
+
 export function renderBoard(container, board, showShips) {
   container.textContent = ''
   const tbody = document.createElement('tbody')
@@ -19,6 +34,10 @@ export function renderBoard(container, board, showShips) {
       div.dataset.row = i
       div.dataset.col = j
       div.appendChild(span)
+
+      if (i === 0 || j === 0) {
+        appendMarkers(div, i, j)
+      }
 
       if (!cell.ship && cell.hit) {
         td.classList.add(styles.battlefield_cell__miss)
@@ -59,4 +78,6 @@ export function renderBoard(container, board, showShips) {
   container.appendChild(tbody)
 }
 
-export function showNotification() {}
+export function renderPlayerLabel(labelEl, player) {
+  labelEl.textContent = `(${player.name})`
+}

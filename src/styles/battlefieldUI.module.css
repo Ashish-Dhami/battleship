@@ -133,3 +133,23 @@
 .battlefield_cell__done {
   pointer-events: none;
 }
+
+.marker {
+  position: absolute;
+  font-size: 11px;
+  user-select: none;
+  pointer-events: none;
+}
+.marker__row {
+  left: -3rem;
+  width: 2.125rem;
+  text-align: right;
+  top: 1em;
+  height: 1em;
+}
+.marker__col {
+  top: -2.125em;
+  left: 0;
+  width: 100%;
+  text-align: center;
+}

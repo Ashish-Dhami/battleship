@@ -1,10 +1,14 @@
+import { RivalPlayer, SelfPlayer } from 'Components'
+
 export default class Game {
   #activePlayer
 
-  constructor(self, rival) {
-    this.self = self
-    this.rival = rival
-    this.#activePlayer = self
+  constructor() {
+    this.self = new SelfPlayer(prompt('Enter your name', 'John'))
+    this.rival = new RivalPlayer()
+    this.#activePlayer = this.self
+    this.winner = null
+    this.ended = false
   }
 
   get activePlayer() {
@@ -15,16 +19,16 @@ export default class Game {
     this.#activePlayer = this.#activePlayer === this.self ? this.rival : this.self
   }
 
-  declareWinner() {
-    alert(`${this.#activePlayer.name} Won`)
+  start() {
+    this.self.board.populate()
+    this.rival.board.populate()
   }
 
-  end() {
+  endWithWinner(player) {
+    this.winner = player
+    this.ended = true
     // disable everything
-    document.body.style.userSelect = 'none'
-    document.body.style.backgroundColor = 'lightred'
     // display notification popup with a 'play again' button
-    confirm('game over !! Play again ?')
     // attach click event to btn
     // onClick() : resets everything and restart the game
   }

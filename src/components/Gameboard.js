@@ -5,7 +5,7 @@ import { renderBoard } from 'UI'
 export default class Gameboard {
   #size
 
-  #SHIPS_META = [
+  static #SHIPS_META = [
     { length: 4, count: 1 },
     { length: 3, count: 2 },
     { length: 2, count: 3 },
@@ -22,6 +22,10 @@ export default class Gameboard {
 
   get size() {
     return this.#size
+  }
+
+  static get MIN_MOVES_TO_WIN() {
+    return this.#SHIPS_META.reduce((moves, ship) => moves + ship.length * ship.count, 0)
   }
 
   #createBoard() {
@@ -63,7 +67,7 @@ export default class Gameboard {
   }
 
   populate() {
-    for (const { length, count } of this.#SHIPS_META) {
+    for (const { length, count } of Gameboard.#SHIPS_META) {
       for (let i = 0; i < count; i++) {
         let placed = false
         let attempts = 0
