@@ -26,6 +26,7 @@ export default [
       'no-console': ['error', { allow: ['error'] }],
       'no-plusplus': 'off',
       'no-restricted-syntax': 'off',
+      'guard-for-in': 'off',
     },
     settings: {
       'import/resolver': {

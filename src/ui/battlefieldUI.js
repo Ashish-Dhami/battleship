@@ -81,3 +81,36 @@ export function renderBoard(container, board, showShips) {
 export function renderPlayerLabel(labelEl, player) {
   labelEl.textContent = `(${player.name})`
 }
+
+export function renderStats(container, ships) {
+  container.textContent = ''
+  const groupedByLen = ships.reduce((grp, ship) => {
+    if (!(ship.len in grp)) grp[ship.len] = []
+    grp[ship.len].push(ship)
+    return grp
+  }, {})
+
+  const shipTypes = document.createElement('div')
+  shipTypes.classList.add(styles.ship_types)
+
+  for (const len in groupedByLen) {
+    const shipType = document.createElement('div')
+    shipType.classList.add(styles.ship_type, `ship_type__len_${len}`)
+    for (const ship of groupedByLen[len]) {
+      const shipEl = document.createElement('span')
+      shipEl.classList.add(styles.ship)
+      if (ship.isSunk()) shipEl.classList.add(styles.ship__killed)
+
+      const shipParts = Array.from({ length: len }, () => {
+        const shipPart = document.createElement('span')
+        shipPart.classList.add(styles.ship_part)
+        return shipPart
+      })
+      shipEl.append(...shipParts)
+      shipType.appendChild(shipEl)
+    }
+    shipTypes.appendChild(shipType)
+  }
+
+  container.appendChild(shipTypes)
+}

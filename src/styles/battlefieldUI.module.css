@@ -153,3 +153,32 @@
   width: 100%;
   text-align: center;
 }
+
+.ship_types {
+  display: inline-block;
+}
+.ship_type {
+  overflow: hidden;
+}
+.ship {
+  margin: 0 7px 13px 0;
+  display: block;
+  float: left;
+}
+.ship:last-child {
+  margin-right: 0;
+}
+.ship_part {
+  width: 7px;
+  height: 7px;
+  margin: 0 1px 0 0;
+  background: #c5c5ff;
+  display: block;
+  float: left;
+}
+.ship__killed .ship_part {
+  background: #ffaeae;
+}
+.ship_part:last-child {
+  margin-right: 0;
+}

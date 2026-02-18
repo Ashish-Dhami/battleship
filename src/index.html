@@ -13,13 +13,15 @@
   </head>
   <body>
     <header>
-      <h1>Battleship</h1>
+      <h1 class="logo">Battleship</h1>
       <div class="notifications">
         <div class="notification notification_init">
           <div class="notificationMessage">Place the ships.</div>
         </div>
       </div>
-      <div class="actions">Leave the game</div>
+      <div class="leave none__visible" data-confirm="Data of the game will be lost!">
+        <a href="http://localhost:8080/" rel="nofollow" class="leave_link">Leave the game</a>
+      </div>
     </header>
     <div class="container">
       <div class="battlefield_wrapper">
@@ -29,6 +31,8 @@
             Your grid
             <div class="battlefield_label__comment"></div>
           </div>
+          <ul class="placeships"></ul>
+          <div class="battlefield_stat"></div>
         </div>
         <div class="battlefield battlefield_rival">
           <table class="battlefield_table"></table>
@@ -36,8 +40,17 @@
             Opponent's grid
             <div class="battlefield_label__comment"></div>
           </div>
+          <div class="battlefield_start">
+            <div class="battlefield_start__button">Play</div>
+          </div>
+          <div class="battlefield_stat"></div>
         </div>
       </div>
     </div>
+    <footer class="footer">
+      <div class="copyright clearfix">
+        <span style="float: left">© 2013—2020 battleship-game.org</span>
+      </div>
+    </footer>
   </body>
 </html>

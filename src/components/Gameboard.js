@@ -1,6 +1,6 @@
 import { Ship } from 'Components'
 import { rand } from 'Utils'
-import { renderBoard } from 'UI'
+import { renderBoard, renderStats } from 'UI'
 
 export default class Gameboard {
   #size
@@ -90,8 +90,16 @@ export default class Gameboard {
     }
   }
 
-  render({ container, showShips = true }) {
+  randomise() {
+    this.ships.length = 0
+    this.value.length = 0
+    this.value = this.#createBoard()
+    this.populate()
+  }
+
+  render({ container, showShips = true, statContainer }) {
     renderBoard(container, this.value, showShips)
+    if (statContainer) renderStats(statContainer, this.ships)
   }
 
   receiveAttack({ row, col }) {
