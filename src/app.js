@@ -1,15 +1,26 @@
 import 'Styles/global.css'
 import * as bfStyles from 'Styles/battlefieldUI.module.css'
 import { Gameboard, Game, Notification, RivalPlayer, SelfPlayer } from 'Components'
-import { renderPlayerLabel, renderPlaceships } from 'UI'
+import { renderPlayerLabel, renderPlaceships, renderModal } from 'UI'
 import { delay, errorHandler } from 'Utils'
 
 function createPlayers() {
-  return { self: new SelfPlayer(prompt('Enter your name', 'John')), rival: new RivalPlayer() }
+  return new Promise((res, rej) => {
+    renderModal(document.body, (name) => {
+      try {
+        res({
+          self: new SelfPlayer(name ?? 'John'),
+          rival: new RivalPlayer(),
+        })
+      } catch (err) {
+        rej(err)
+      }
+    })
+  })
 }
 
-function init() {
-  const { self, rival } = createPlayers()
+async function init() {
+  const { self, rival } = await createPlayers()
   const game = new Game(self, rival)
   const minMovesToWin = Gameboard.MIN_MOVES_TO_WIN
 

@@ -1,5 +1,6 @@
 import * as styles from 'Styles/battlefieldUI.module.css'
 import { isOrigin, calcAlign } from 'Utils'
+import arrowRight from 'Assets/arrow-right.svg'
 
 function appendMarkers(container, row, col) {
   if (col === 0) {
@@ -113,4 +114,62 @@ export function renderStats(container, ships) {
   }
 
   container.appendChild(shipTypes)
+}
+
+function createModal({ onSubmit }) {
+  const modal = document.createElement('form')
+  modal.classList.add(styles.modal)
+  modal.noValidate = true
+  const fieldGrp = document.createElement('div')
+  fieldGrp.style.display = 'inline-block'
+  const nameInput = document.createElement('input')
+  nameInput.classList.add(styles.input)
+  nameInput.minLength = 3
+  nameInput.maxLength = 14
+  nameInput.required = true
+  nameInput.autocomplete = 'off'
+  nameInput.placeholder = "Your player's name"
+  const error = document.createElement('div')
+  error.classList.add(styles.error)
+  nameInput.addEventListener('input', () => {
+    error.textContent = ''
+    if (!nameInput.checkValidity()) {
+      if (nameInput.validity.valueMissing) {
+        error.textContent = 'Name is required'
+        return
+      }
+      if (nameInput.validity.tooShort) {
+        error.textContent = `Name must be atleast ${nameInput.minLength} chars`
+      }
+    }
+  })
+  modal.addEventListener('submit', (e) => {
+    e.preventDefault()
+    if (!modal.checkValidity()) return
+    onSubmit(nameInput.value.trim())
+  })
+  const arrowRightImg = document.createElement('img')
+  arrowRightImg.classList.add(styles.arrowRight)
+  arrowRightImg.src = arrowRight
+  const btn = document.createElement('button')
+  btn.classList.add(styles.modal__btn)
+  btn.append(arrowRightImg)
+  fieldGrp.append(nameInput, error)
+  modal.append(fieldGrp, btn)
+  return modal
+}
+
+export function renderModal(container, onSubmit) {
+  const overlay = document.createElement('div')
+  overlay.className = styles.modal_overlay
+
+  overlay.appendChild(
+    createModal({
+      onSubmit: (name) => {
+        onSubmit(name)
+        overlay.remove()
+      },
+    })
+  )
+  container.appendChild(overlay)
 }
