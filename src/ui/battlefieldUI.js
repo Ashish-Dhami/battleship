@@ -128,6 +128,7 @@ function createModal({ onSubmit }) {
   nameInput.maxLength = 14
   nameInput.required = true
   nameInput.autocomplete = 'off'
+  nameInput.autofocus = true
   nameInput.placeholder = "Your player's name"
   const error = document.createElement('div')
   error.classList.add(styles.error)
