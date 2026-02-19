@@ -43,7 +43,7 @@ header {
 }
 
 .notifications {
-  flex-basis: 540px;
+  flex-basis: 400px;
 }
 
 .notification {
@@ -236,4 +236,26 @@ header {
 
 .setting_input:disabled + .setting_label {
   color: #666;
+}
+
+.notification-message {
+  font-weight: 500;
+  position: relative;
+  z-index: 0;
+}
+
+.notification__game-over-win {
+  background: green;
+  color: #fff;
+}
+
+.notification__game-over-lose,
+.notification__game-error {
+  background: red;
+  color: #fff;
+}
+
+.notification-submit {
+  margin-top: 0.6rem;
+  padding: 2px 8px;
 }

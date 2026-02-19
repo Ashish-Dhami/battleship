@@ -15,8 +15,29 @@
     <header>
       <h1 class="logo">Battleship</h1>
       <div class="notifications">
-        <div class="notification notification_init">
-          <div class="notificationMessage">Place the ships.</div>
+        <div class="notification notification__init">
+          <div class="notification-message">Place the ships.</div>
+        </div>
+        <div class="notification notification__game-started-move-on none">
+          <div class="notification-message">The game started, your turn.</div>
+        </div>
+        <div class="notification notification__move-on none">
+          <div class="notification-message">Your turn.</div>
+        </div>
+        <div class="notification notification__move-off none">
+          <div class="notification-message">Opponent's turn, please wait.</div>
+        </div>
+        <div class="notification notification__game-over-win none">
+          <div class="notification-message">Game over. Congratulations, you won!</div>
+          <input class="notification-submit restart" type="submit" value="Play again" />
+        </div>
+        <div class="notification notification__game-over-lose none">
+          <div class="notification-message">Game over. You lose.</div>
+          <input class="notification-submit restart" type="submit" value="Rematch" />
+        </div>
+        <div class="notification notification__game-error none">
+          <div class="notification-message">Unexpected error. Further play is impossible.</div>
+          <input class="notification-submit restart" type="submit" value="Create new game" />
         </div>
       </div>
       <div class="leave none__visible" data-confirm="Data of the game will be lost!">

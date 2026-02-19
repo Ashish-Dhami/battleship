@@ -1,8 +1,8 @@
 import 'Styles/global.css'
 import * as bfStyles from 'Styles/battlefieldUI.module.css'
-import { Gameboard, Game } from 'Components'
+import { Gameboard, Game, Notification } from 'Components'
 import { renderPlayerLabel, renderPlaceships } from 'UI'
-import { delay } from 'Utils'
+import { delay, errorHandler } from 'Utils'
 
 function init() {
   const game = new Game()
@@ -18,29 +18,32 @@ function init() {
   const startBtn = document.querySelector('.battlefield_start__button')
   const leaveBtn = document.querySelector('.leave')
   const placeships = document.querySelector('.placeships')
+  const n10ncontainer = document.querySelector('.notifications')
+  const n10n = new Notification(n10ncontainer)
 
   rivalTable.classList.add('battlefield_table__disabled')
 
-  function handleLeave() {}
+  const handleLeave = errorHandler(() => {}, n10n)
 
-  function handleStart() {
+  const handleStart = errorHandler(() => {
     rivalTable.classList.remove('battlefield_table__disabled')
     selfTable.classList.add('battlefield_table__disabled')
     startBtn.parentElement.classList.add('none')
     placeships.classList.add('none')
     leaveBtn.classList.remove('none__visible')
-  }
+    n10n.notify('FIRST_MOVE_ON')
+  }, n10n)
 
   leaveBtn.addEventListener('click', handleLeave)
   startBtn.addEventListener('click', handleStart, { once: true })
 
-  function onRandomise() {
+  const onRandomise = errorHandler(() => {
     self.board.randomise()
     self.board.render({ container: selfTable })
-  }
-  function onReset() {
+  }, n10n)
+  const onReset = errorHandler(() => {
     alert('reset')
-  }
+  }, n10n)
 
   game.start()
 
@@ -59,6 +62,7 @@ function init() {
     // check winner (after min 20 moves to optimize)
     if (++rival.moveCount >= minMovesToWin && self.board.allSunk()) {
       game.endWithWinner(rival)
+      n10n.notify('OVER_LOSE')
       return 'end'
     }
     if (result.status === 'hit') return 'hit'
@@ -68,15 +72,16 @@ function init() {
     return 'miss'
   }
 
-  async function computerTurn() {
+  const computerTurn = errorHandler(async () => {
     while (game.activePlayer === rival) {
       await delay(1000)
       const outcome = playComputer()
       if (['stop', 'end', 'miss'].includes(outcome)) break
     }
-  }
+    n10n.notify('MOVE_ON')
+  }, n10n)
 
-  rivalTable.addEventListener('click', (e) => {
+  const playSelf = errorHandler((e) => {
     if (game.activePlayer !== self) return
     const cellEl = e.target.closest(`.${bfStyles.battlefield_cell__content}`)
     if (!cellEl) return
@@ -92,6 +97,7 @@ function init() {
     // check winner (after min 20 moves to optimize)
     if (++self.moveCount >= minMovesToWin && rival.board.allSunk()) {
       game.endWithWinner(self)
+      n10n.notify('OVER_WIN')
       return
     }
     if (result.status === 'hit') return
@@ -99,8 +105,19 @@ function init() {
     rivalTable.classList.add('battlefield_table__disabled')
     selfTable.classList.remove('battlefield_table__disabled')
 
+    n10n.notify('MOVE_OFF')
     computerTurn()
-  })
+  }, n10n)
+
+  rivalTable.addEventListener('click', playSelf)
 }
 
-init()
+window.addEventListener('error', (e) => {
+  console.error(e.error)
+})
+
+window.addEventListener('unhandledrejection', (e) => {
+  console.error(e.reason)
+})
+
+errorHandler(init)()
