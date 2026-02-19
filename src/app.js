@@ -1,12 +1,16 @@
 import 'Styles/global.css'
 import * as bfStyles from 'Styles/battlefieldUI.module.css'
-import { Gameboard, Game, Notification } from 'Components'
+import { Gameboard, Game, Notification, RivalPlayer, SelfPlayer } from 'Components'
 import { renderPlayerLabel, renderPlaceships } from 'UI'
 import { delay, errorHandler } from 'Utils'
 
+function createPlayers() {
+  return { self: new SelfPlayer(prompt('Enter your name', 'John')), rival: new RivalPlayer() }
+}
+
 function init() {
-  const game = new Game()
-  const { self, rival } = game
+  const { self, rival } = createPlayers()
+  const game = new Game(self, rival)
   const minMovesToWin = Gameboard.MIN_MOVES_TO_WIN
 
   const selfTable = document.querySelector('.battlefield_self .battlefield_table')
@@ -23,7 +27,12 @@ function init() {
 
   rivalTable.classList.add('battlefield_table__disabled')
 
-  const handleLeave = errorHandler(() => {}, n10n)
+  const handleLeave = errorHandler((e) => {
+    e.preventDefault()
+    const confirmMsg = leaveBtn.dataset.confirm
+    if (!confirm(confirmMsg)) return
+    location.reload()
+  }, n10n)
 
   const handleStart = errorHandler(() => {
     rivalTable.classList.remove('battlefield_table__disabled')
@@ -34,8 +43,30 @@ function init() {
     n10n.notify('FIRST_MOVE_ON')
   }, n10n)
 
+  const handleRestart = errorHandler(({ autoStart }) => {
+    game.restart(document.body)
+    self.board.render({ container: selfTable, statContainer: selfStat })
+    rival.board.render({ container: rivalTable, showShips: false, statContainer: rivalStat })
+    rivalTable.classList.add('battlefield_table__disabled')
+    selfTable.classList.remove('battlefield_table__disabled')
+    startBtn.parentElement.classList.remove('none')
+    placeships.classList.remove('none')
+    leaveBtn.classList.add('none__visible')
+    n10n.notify('INIT')
+    if (autoStart) {
+      handleStart()
+    }
+  }, n10n)
+
   leaveBtn.addEventListener('click', handleLeave)
-  startBtn.addEventListener('click', handleStart, { once: true })
+  startBtn.addEventListener('click', handleStart)
+  n10ncontainer.addEventListener('click', (e) => {
+    e.preventDefault()
+    const elem = e.target
+    if (elem?.classList.contains('restart')) {
+      handleRestart({ autoStart: elem.value !== 'Create new game' })
+    }
+  })
 
   const onRandomise = errorHandler(() => {
     self.board.randomise()
@@ -54,14 +85,14 @@ function init() {
   renderPlaceships(placeships, onRandomise, onReset)
 
   function playComputer() {
-    if (game.activePlayer !== rival) return 'stop'
+    if (game.ended || game.activePlayer !== rival) return 'stop'
     const [row, col] = rival.chooseMove()
     const result = self.board.receiveAttack({ row, col })
     if (!result) return 'retry'
     self.board.render({ container: selfTable, statContainer: result.status === 'hit' ? selfStat : null })
     // check winner (after min 20 moves to optimize)
     if (++rival.moveCount >= minMovesToWin && self.board.allSunk()) {
-      game.endWithWinner(rival)
+      game.end(document.body)
       n10n.notify('OVER_LOSE')
       return 'end'
     }
@@ -82,7 +113,7 @@ function init() {
   }, n10n)
 
   const playSelf = errorHandler((e) => {
-    if (game.activePlayer !== self) return
+    if (game.ended || game.activePlayer !== self) return
     const cellEl = e.target.closest(`.${bfStyles.battlefield_cell__content}`)
     if (!cellEl) return
     const row = Number(cellEl.dataset.row)
@@ -96,7 +127,7 @@ function init() {
     })
     // check winner (after min 20 moves to optimize)
     if (++self.moveCount >= minMovesToWin && rival.board.allSunk()) {
-      game.endWithWinner(self)
+      game.end(document.body)
       n10n.notify('OVER_WIN')
       return
     }

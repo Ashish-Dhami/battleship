@@ -25,4 +25,10 @@ export default class RivalPlayer extends Player {
 
     return key.split(',').map(Number)
   }
+
+  reset() {
+    super.reset()
+    this.availableMoves.length = 0
+    this.#initMoves()
+  }
 }

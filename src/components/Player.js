@@ -6,4 +6,9 @@ export default class Player {
     this.board = new Gameboard()
     this.moveCount = 0
   }
+
+  reset() {
+    this.board.randomise()
+    this.moveCount = 0
+  }
 }

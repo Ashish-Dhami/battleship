@@ -63,6 +63,11 @@ header {
   gap: 90px;
 }
 
+.body__game_over .battlefield_wrapper {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
 .battlefield {
   display: flex;
   flex-direction: column;
@@ -94,6 +99,10 @@ header {
   }
 }
 
+.body__game_over .battlefield_table__disabled tbody {
+  opacity: 1;
+}
+
 .battlefield_label {
   font-size: 0.8em;
   position: relative;
@@ -115,6 +124,11 @@ header {
 .battlefield_table__disabled ~ .battlefield_stat {
   opacity: 0.4;
   pointer-events: none;
+}
+
+.body__game_over .battlefield_table__disabled + .battlefield_label,
+.body__game_over .battlefield_table__disabled ~ .battlefield_stat {
+  opacity: 1;
 }
 
 .battlefield_start {

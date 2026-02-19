@@ -1,13 +1,10 @@
-import { RivalPlayer, SelfPlayer } from 'Components'
-
 export default class Game {
   #activePlayer
 
-  constructor() {
-    this.self = new SelfPlayer(prompt('Enter your name', 'John'))
-    this.rival = new RivalPlayer()
+  constructor(self, rival) {
+    this.self = self
+    this.rival = rival
     this.#activePlayer = this.self
-    this.winner = null
     this.ended = false
   }
 
@@ -24,12 +21,16 @@ export default class Game {
     this.rival.board.populate()
   }
 
-  endWithWinner(player) {
-    this.winner = player
+  end(gameBody) {
     this.ended = true
-    // disable everything
-    // display notification popup with a 'play again' button
-    // attach click event to btn
-    // onClick() : resets everything and restart the game
+    gameBody.classList.add('body__game_over')
+  }
+
+  restart(gameBody) {
+    this.self.reset()
+    this.rival.reset()
+    this.#activePlayer = this.self
+    this.ended = false
+    gameBody.classList.remove('body__game_over')
   }
 }
