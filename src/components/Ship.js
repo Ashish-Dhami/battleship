@@ -1,6 +1,9 @@
 export default class Ship {
-  constructor(len) {
+  constructor(len, align, origin) {
+    this.id = crypto.randomUUID()
     this.len = len
+    this.align = align
+    this.origin = origin
     this.hits = 0
   }
 

@@ -33,12 +33,13 @@ export default class Gameboard {
       Array.from({ length: this.#size }, () => ({
         ship: null,
         hit: false,
+        missAuto: false,
       }))
     )
   }
 
-  #isPlacementValid(align, ship, { row, col }) {
-    for (let i = 0; i < ship.len; i++) {
+  #isPlacementValid(length, align, { row, col }) {
+    for (let i = 0; i < length; i++) {
       const r = align === 'v' ? row + i : row
       const c = align === 'h' ? col + i : col
       if (
@@ -57,7 +58,11 @@ export default class Gameboard {
     return true
   }
 
-  #placeShip(align, ship, { row, col }) {
+  #placeShip(ship) {
+    const {
+      align,
+      origin: { row, col },
+    } = ship
     for (let i = 0; i < ship.len; i++) {
       const r = align === 'v' ? row + i : row
       const c = align === 'h' ? col + i : col
@@ -71,15 +76,14 @@ export default class Gameboard {
       for (let i = 0; i < count; i++) {
         let placed = false
         let attempts = 0
-        const ship = new Ship(length)
         while (!placed && attempts < this.#MAX_ATTEMPTS) {
           attempts++
           const align = Math.random() > 0.5 ? 'v' : 'h'
           const maxRow = align === 'v' ? this.#size - length : this.#size - 1
           const maxCol = align === 'h' ? this.#size - length : this.#size - 1
           const coordinates = { row: rand(maxRow + 1), col: rand(maxCol + 1) }
-          if (this.#isPlacementValid(align, ship, coordinates)) {
-            this.#placeShip(align, ship, coordinates)
+          if (this.#isPlacementValid(length, align, coordinates)) {
+            this.#placeShip(new Ship(length, align, coordinates))
             placed = true
           }
         }
@@ -102,14 +106,42 @@ export default class Gameboard {
     if (statContainer) renderStats(statContainer, this.ships)
   }
 
+  #getEdgeCells(ship, { row, col }) {
+    const edgeCells = []
+    if (ship.align === 'h' || ship.len === 1) {
+      edgeCells.push(this.value[row]?.[ship.origin.col - 1])
+      edgeCells.push(this.value[row]?.[ship.origin.col + ship.len])
+    }
+    if (ship.align === 'v' || ship.len === 1) {
+      edgeCells.push(this.value[ship.origin.row - 1]?.[col])
+      edgeCells.push(this.value[ship.origin.row + ship.len]?.[col])
+    }
+    return edgeCells
+  }
+
   receiveAttack({ row, col }) {
     const cell = this.value[row]?.[col]
+    const verifiedEmptyCells = [
+      this.value[row - 1]?.[col - 1],
+      this.value[row + 1]?.[col + 1],
+      this.value[row + 1]?.[col - 1],
+      this.value[row - 1]?.[col + 1],
+    ]
     if (!cell) return
     if (cell.hit) return
     cell.hit = true
     if (cell.ship) {
       cell.ship.hit()
-      return { status: 'hit' }
+      if (cell.ship.isSunk()) {
+        verifiedEmptyCells.push(...this.#getEdgeCells(cell.ship, { row, col }))
+      }
+      verifiedEmptyCells.forEach((ec) => {
+        if (ec && !ec.hit && !ec.ship) {
+          ec.hit = true
+          ec.missAuto = true
+        }
+      })
+      return { status: 'hit', ship: cell.ship }
     }
     return { status: 'miss' }
   }

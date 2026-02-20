@@ -104,10 +104,12 @@ async function init() {
     // check winner (after min 20 moves to optimize)
     if (++rival.moveCount >= minMovesToWin && self.board.allSunk()) {
       game.end(document.body)
-      n10n.notify('OVER_LOSE')
       return 'end'
     }
-    if (result.status === 'hit') return 'hit'
+    if (result.status === 'hit') {
+      rival.invalidateMovesAroundShip({ row, col }, result.ship)
+      return 'hit'
+    }
     game.switchTurn()
     selfTable.classList.add('battlefield_table__disabled')
     rivalTable.classList.remove('battlefield_table__disabled')
@@ -115,12 +117,16 @@ async function init() {
   }
 
   const computerTurn = errorHandler(async () => {
+    let notifyType = 'MOVE_ON'
     while (game.activePlayer === rival) {
       await delay(1000)
       const outcome = playComputer()
-      if (['stop', 'end', 'miss'].includes(outcome)) break
+      if (['stop', 'end', 'miss'].includes(outcome)) {
+        if (outcome === 'end') notifyType = 'OVER_LOSE'
+        break
+      }
     }
-    n10n.notify('MOVE_ON')
+    n10n.notify(notifyType)
   }, n10n)
 
   const playSelf = errorHandler((e) => {
@@ -163,3 +169,7 @@ window.addEventListener('unhandledrejection', (e) => {
 })
 
 errorHandler(init)()
+
+// TODO: drag-n-drop
+// TODO: add settings for sound, mark verified empty cells
+// TODO: Polish the intelligence of the computer player by having it try adjacent slots after getting a ‘hit’.
