@@ -16,3 +16,11 @@ export function errorHandler(targetFn, n10n) {
     }
   }
 }
+
+export function persistData(identifier, data) {
+  localStorage.setItem(identifier, JSON.stringify(data))
+}
+
+export function getPersistedData(identifier) {
+  return JSON.parse(localStorage.getItem(identifier))
+}

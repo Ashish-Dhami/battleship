@@ -119,7 +119,7 @@ export default class Gameboard {
     return edgeCells
   }
 
-  receiveAttack({ row, col }) {
+  receiveAttack({ row, col }, shootHint) {
     const cell = this.value[row]?.[col]
     const verifiedEmptyCells = [
       this.value[row - 1]?.[col - 1],
@@ -132,15 +132,17 @@ export default class Gameboard {
     cell.hit = true
     if (cell.ship) {
       cell.ship.hit()
-      if (cell.ship.isSunk()) {
-        verifiedEmptyCells.push(...this.#getEdgeCells(cell.ship, { row, col }))
-      }
-      verifiedEmptyCells.forEach((ec) => {
-        if (ec && !ec.hit && !ec.ship) {
-          ec.hit = true
-          ec.missAuto = true
+      if (shootHint) {
+        if (cell.ship.isSunk()) {
+          verifiedEmptyCells.push(...this.#getEdgeCells(cell.ship, { row, col }))
         }
-      })
+        verifiedEmptyCells.forEach((ec) => {
+          if (ec && !ec.hit && !ec.ship) {
+            ec.hit = true
+            ec.missAuto = true
+          }
+        })
+      }
       return { status: 'hit', ship: cell.ship }
     }
     return { status: 'miss' }

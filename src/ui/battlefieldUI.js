@@ -177,3 +177,9 @@ export function renderModal(container, onSubmit) {
   )
   container.appendChild(overlay)
 }
+
+export function updateGamePrefsUI(container, prefs) {
+  Array.from(container.querySelectorAll('.setting')).forEach((el) => {
+    el.firstElementChild.checked = prefs[el.dataset.name]
+  })
+}

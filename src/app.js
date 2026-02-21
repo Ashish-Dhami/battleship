@@ -1,7 +1,7 @@
 import 'Styles/global.css'
 import * as bfStyles from 'Styles/battlefieldUI.module.css'
 import { Gameboard, Game, Notification, RivalPlayer, SelfPlayer } from 'Components'
-import { renderPlayerLabel, renderPlaceships, renderModal } from 'UI'
+import { renderPlayerLabel, renderPlaceships, renderModal, updateGamePrefsUI } from 'UI'
 import { delay, errorHandler } from 'Utils'
 
 function createPlayers() {
@@ -33,6 +33,7 @@ async function init() {
   const startBtn = document.querySelector('.battlefield_start__button')
   const leaveBtn = document.querySelector('.leave')
   const placeships = document.querySelector('.placeships')
+  const settings = document.querySelector('.settings')
   const n10ncontainer = document.querySelector('.notifications')
   const n10n = new Notification(n10ncontainer)
 
@@ -69,8 +70,17 @@ async function init() {
     }
   }, n10n)
 
+  const handleSettingsChange = errorHandler((e) => {
+    const input = e.target
+    if (!input?.classList.contains('setting_input')) return
+    const setting = input.closest('.setting')
+    const pref = setting.dataset.name
+    game.setPref(pref, input.checked)
+  }, n10n)
+
   leaveBtn.addEventListener('click', handleLeave)
   startBtn.addEventListener('click', handleStart)
+  settings.addEventListener('change', handleSettingsChange)
   n10ncontainer.addEventListener('click', (e) => {
     e.preventDefault()
     const elem = e.target
@@ -83,6 +93,7 @@ async function init() {
     self.board.randomise()
     self.board.render({ container: selfTable })
   }, n10n)
+
   const onReset = errorHandler(() => {
     alert('reset')
   }, n10n)
@@ -94,11 +105,12 @@ async function init() {
   renderPlayerLabel(selfLabelComment, self)
   renderPlayerLabel(rivalLabelComment, rival)
   renderPlaceships(placeships, onRandomise, onReset)
+  updateGamePrefsUI(settings, game.PREFS)
 
   function playComputer() {
     if (game.ended || game.activePlayer !== rival) return 'stop'
     const [row, col] = rival.chooseMove()
-    const result = self.board.receiveAttack({ row, col })
+    const result = self.board.receiveAttack({ row, col }, game.PREFS.shootHint)
     if (!result) return 'retry'
     self.board.render({ container: selfTable, statContainer: result.status === 'hit' ? selfStat : null })
     // check winner (after min 20 moves to optimize)
@@ -107,7 +119,7 @@ async function init() {
       return 'end'
     }
     if (result.status === 'hit') {
-      rival.invalidateMovesAroundShip({ row, col }, result.ship)
+      if (game.PREFS.shootHint) rival.invalidateMovesAroundShip({ row, col }, result.ship)
       return 'hit'
     }
     game.switchTurn()
@@ -135,7 +147,7 @@ async function init() {
     if (!cellEl) return
     const row = Number(cellEl.dataset.row)
     const col = Number(cellEl.dataset.col)
-    const result = rival.board.receiveAttack({ row, col })
+    const result = rival.board.receiveAttack({ row, col }, game.PREFS.shootHint)
     if (!result) return
     rival.board.render({
       container: rivalTable,
@@ -171,5 +183,5 @@ window.addEventListener('unhandledrejection', (e) => {
 errorHandler(init)()
 
 // TODO: drag-n-drop
-// TODO: add settings for sound, mark verified empty cells
+// TODO: add setting for sound
 // TODO: Polish the intelligence of the computer player by having it try adjacent slots after getting a ‘hit’.
