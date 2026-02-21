@@ -44,8 +44,16 @@ async function init() {
 
   const dom = { selfTable, rivalTable, selfStat, rivalStat, startBtn, leaveBtn, placeships, root: document.body }
   const deps = { game, bfStyles, dom, utils: { delay, minMovesToWin }, n10n }
-  const { playSelf, handleLeave, handleStart, handleRestart, handleSettingsChange, onRandomise, onReset } =
-    createHandlers(deps)
+  const {
+    playSelf,
+    handleLeave,
+    handleStart,
+    handleRestart,
+    handleSettingsChange,
+    onRandomise,
+    onReset,
+    withClickSound,
+  } = createHandlers(deps)
 
   game.start()
 
@@ -57,18 +65,21 @@ async function init() {
   updateGamePrefsUI(settings, game.PREFS)
 
   rivalTable.addEventListener('click', errorHandler(playSelf, n10n))
-  leaveBtn.addEventListener('click', errorHandler(handleLeave, n10n))
-  startBtn.addEventListener('click', errorHandler(handleStart, n10n))
-  settings.addEventListener('click', errorHandler(handleSettingsChange, n10n))
+  leaveBtn.addEventListener('click', errorHandler(withClickSound(handleLeave), n10n))
+  startBtn.addEventListener('click', errorHandler(withClickSound(handleStart), n10n))
+  settings.addEventListener('click', errorHandler(withClickSound(handleSettingsChange), n10n))
   n10ncontainer.addEventListener(
     'click',
-    errorHandler((e) => {
-      e.preventDefault()
-      const elem = e.target
-      if (elem?.classList.contains('restart')) {
-        handleRestart({ autoStart: elem.value !== 'Create new game' })
-      }
-    }, n10n)
+    errorHandler(
+      withClickSound((e) => {
+        e.preventDefault()
+        const elem = e.target
+        if (elem?.classList.contains('restart')) {
+          handleRestart({ autoStart: elem.value !== 'Create new game' })
+        }
+      }),
+      n10n
+    )
   )
 }
 

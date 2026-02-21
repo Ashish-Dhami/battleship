@@ -133,5 +133,21 @@ export default function createHandlers({ game, bfStyles, dom, utils, n10n }) {
     alert('reset')
   }
 
-  return { playSelf, handleLeave, handleStart, handleRestart, handleSettingsChange, onRandomise, onReset }
+  function withClickSound(handler) {
+    return (e) => {
+      game.playSound('CLICK')
+      return handler(e)
+    }
+  }
+
+  return {
+    playSelf,
+    handleLeave,
+    handleStart,
+    handleRestart,
+    handleSettingsChange,
+    onRandomise,
+    onReset,
+    withClickSound,
+  }
 }
