@@ -61,7 +61,11 @@ async function init() {
   rival.board.render({ container: rivalTable, showShips: false, statContainer: rivalStat })
   renderPlayerLabel(selfLabelComment, self)
   renderPlayerLabel(rivalLabelComment, rival)
-  renderPlaceships(placeships, errorHandler(onRandomise, n10n), errorHandler(onReset, n10n))
+  renderPlaceships(
+    placeships,
+    errorHandler(withClickSound(onRandomise), n10n),
+    errorHandler(withClickSound(onReset), n10n)
+  )
   updateGamePrefsUI(settings, game.PREFS)
 
   rivalTable.addEventListener('click', errorHandler(playSelf, n10n))
