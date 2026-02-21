@@ -102,7 +102,7 @@ export default function createHandlers({ game, bfStyles, dom, utils, n10n }) {
   }
 
   function handleRestart({ autoStart }) {
-    game.restart(document.body)
+    game.restart(dom.root)
     game.self.board.render({ container: selfTable, statContainer: selfStat })
     game.rival.board.render({ container: rivalTable, showShips: false, statContainer: rivalStat })
     rivalTable.classList.add('battlefield_table__disabled')
