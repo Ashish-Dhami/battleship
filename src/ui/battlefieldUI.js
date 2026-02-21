@@ -1,5 +1,5 @@
 import * as styles from 'Styles/battlefieldUI.module.css'
-import arrowRight from 'Assets/arrow-right.svg'
+import arrowRight from 'Assets/images/arrow-right.svg'
 
 function appendMarkers(container, row, col) {
   if (col === 0) {

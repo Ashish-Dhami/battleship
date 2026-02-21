@@ -7,6 +7,15 @@ export default class Game {
 
   static #DEFAULT_PREFS = { shootHint: true, sound: false }
 
+  static #SOUNDS = {
+    GAME_STARTED: 'game_started',
+    SHOOT_MISSED: 'shoot_missed',
+    SHOOT_WOUNDED: 'shoot_wounded',
+    SHOOT_KILLED: 'shoot_killed',
+    OVER_WIN: 'win',
+    OVER_LOSE: 'lose',
+  }
+
   constructor(self, rival) {
     this.self = self
     this.rival = rival
@@ -58,5 +67,16 @@ export default class Game {
     this.#activePlayer = this.self
     this.ended = false
     gameBody.classList.remove('body__game_over')
+  }
+
+  playSound(type) {
+    if (!this.#PREFS.sound) return
+    const soundType = Game.#SOUNDS[type]
+    if (!soundType) return
+    const audio = document.querySelector(`.sounds .sound__${soundType}`)
+    if (!audio) return
+    audio.pause()
+    audio.currentTime = 0
+    audio.play().catch(() => {})
   }
 }

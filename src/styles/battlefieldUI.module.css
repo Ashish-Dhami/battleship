@@ -186,7 +186,7 @@
 .modal_overlay {
   position: fixed;
   inset: 0;
-  background: url('Assets/modal-overlay.svg') center/cover no-repeat fixed;
+  background: url('Assets/images/modal-overlay.svg') center/cover no-repeat fixed;
   display: grid;
   place-items: center;
   z-index: 2000;

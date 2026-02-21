@@ -47,6 +47,7 @@ async function init() {
   }, n10n)
 
   const handleStart = errorHandler(() => {
+    game.playSound('GAME_STARTED')
     rivalTable.classList.remove('battlefield_table__disabled')
     selfTable.classList.add('battlefield_table__disabled')
     startBtn.parentElement.classList.add('none')
@@ -115,13 +116,16 @@ async function init() {
     self.board.render({ container: selfTable, statContainer: result.status === 'hit' ? selfStat : null })
     // check winner (after min 20 moves to optimize)
     if (++rival.moveCount >= minMovesToWin && self.board.allSunk()) {
+      game.playSound('OVER_LOSE')
       game.end(document.body)
       return 'end'
     }
     if (result.status === 'hit') {
+      result.ship.isSunk() ? game.playSound('SHOOT_KILLED') : game.playSound('SHOOT_WOUNDED')
       if (game.PREFS.shootHint) rival.invalidateMovesAroundShip({ row, col }, result.ship)
       return 'hit'
     }
+    game.playSound('SHOOT_MISSED')
     game.switchTurn()
     selfTable.classList.add('battlefield_table__disabled')
     rivalTable.classList.remove('battlefield_table__disabled')
@@ -156,11 +160,16 @@ async function init() {
     })
     // check winner (after min 20 moves to optimize)
     if (++self.moveCount >= minMovesToWin && rival.board.allSunk()) {
+      game.playSound('OVER_WIN')
       game.end(document.body)
       n10n.notify('OVER_WIN')
       return
     }
-    if (result.status === 'hit') return
+    if (result.status === 'hit') {
+      result.ship.isSunk() ? game.playSound('SHOOT_KILLED') : game.playSound('SHOOT_WOUNDED')
+      return
+    }
+    game.playSound('SHOOT_MISSED')
     game.switchTurn()
     rivalTable.classList.add('battlefield_table__disabled')
     selfTable.classList.remove('battlefield_table__disabled')
@@ -183,5 +192,4 @@ window.addEventListener('unhandledrejection', (e) => {
 errorHandler(init)()
 
 // TODO: drag-n-drop
-// TODO: add setting for sound
 // TODO: Polish the intelligence of the computer player by having it try adjacent slots after getting a ‘hit’.
