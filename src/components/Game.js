@@ -14,6 +14,7 @@ export default class Game {
     SHOOT_KILLED: 'shoot_killed',
     OVER_WIN: 'win',
     OVER_LOSE: 'lose',
+    CLICK: 'click',
   }
 
   constructor(self, rival) {
