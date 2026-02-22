@@ -98,4 +98,3 @@ window.addEventListener('unhandledrejection', (e) => {
 errorHandler(init)()
 
 // TODO: drag-n-drop
-// TODO: Polish the intelligence of the computer player by having it try adjacent slots after getting a ‘hit’.

@@ -18,7 +18,7 @@ export default function createHandlers({ game, bfStyles, dom, utils, n10n }) {
 
     if (result.status === 'hit') {
       game.playSound(result.ship.isSunk() ? 'SHOOT_KILLED' : 'SHOOT_WOUNDED')
-      if (game.PREFS.shootHint) game.rival.invalidateMovesAroundShip({ row, col }, result.ship)
+      game.rival.registerHit({ row, col }, result.ship, { shootHint: game.PREFS.shootHint })
       return 'hit'
     }
 
@@ -45,7 +45,7 @@ export default function createHandlers({ game, bfStyles, dom, utils, n10n }) {
     n10n.notify(notifyType)
   }
 
-  function playSelf(e) {
+  async function playSelf(e) {
     if (game.ended || game.activePlayer !== game.self) return
 
     const cellEl = e.target.closest(`.${bfStyles.battlefield_cell__content}`)
@@ -81,7 +81,7 @@ export default function createHandlers({ game, bfStyles, dom, utils, n10n }) {
     selfTable.classList.remove('battlefield_table__disabled')
 
     n10n.notify('MOVE_OFF')
-    computerTurn()
+    await computerTurn()
   }
 
   function handleLeave(e) {
