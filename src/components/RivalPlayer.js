@@ -40,13 +40,15 @@ export default class RivalPlayer extends Player {
     this.availableMoves.delete(this.#key(row + 1, col + 1))
     this.availableMoves.delete(this.#key(row + 1, col - 1))
     this.availableMoves.delete(this.#key(row - 1, col + 1))
-    if (ship.align === 'h' || ship.len === 1) {
-      this.availableMoves.delete(this.#key(row, ship.origin.col - 1))
-      this.availableMoves.delete(this.#key(row, ship.origin.col + ship.len))
-    }
-    if (ship.align === 'v' || ship.len === 1) {
-      this.availableMoves.delete(this.#key(ship.origin.row - 1, col))
-      this.availableMoves.delete(this.#key(ship.origin.row + ship.len, col))
+    if (ship.isSunk()) {
+      if (ship.align === 'h' || ship.len === 1) {
+        this.availableMoves.delete(this.#key(row, ship.origin.col - 1))
+        this.availableMoves.delete(this.#key(row, ship.origin.col + ship.len))
+      }
+      if (ship.align === 'v' || ship.len === 1) {
+        this.availableMoves.delete(this.#key(ship.origin.row - 1, col))
+        this.availableMoves.delete(this.#key(ship.origin.row + ship.len, col))
+      }
     }
   }
 
