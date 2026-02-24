@@ -16,6 +16,7 @@ body {
   display: grid;
   height: 100vh;
   grid-template: 80px 1fr/ 1fr;
+  user-select: none;
 }
 
 .container {

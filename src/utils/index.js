@@ -24,3 +24,10 @@ export function persistData(identifier, data) {
 export function getPersistedData(identifier) {
   return JSON.parse(localStorage.getItem(identifier))
 }
+
+export function getCells(r, c, len, align) {
+  return Array.from({ length: len }, (_, i) => ({
+    row: align === 'v' ? r + i : r,
+    col: align === 'h' ? c + i : c,
+  }))
+}

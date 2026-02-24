@@ -2,7 +2,7 @@ import 'Styles/global.css'
 import * as bfStyles from 'Styles/battlefieldUI.module.css'
 import { Gameboard, Game, Notification, RivalPlayer, SelfPlayer } from 'Components'
 import { renderPlayerLabel, renderPlaceships, renderModal, updateGamePrefsUI } from 'UI'
-import { delay, errorHandler } from 'Utils'
+import { delay, errorHandler, getCells } from 'Utils'
 import { createHandlers } from 'Modules'
 
 function createPlayers() {
@@ -25,6 +25,7 @@ async function init() {
   const game = new Game(self, rival)
 
   const minMovesToWin = Gameboard.MIN_MOVES_TO_WIN
+  const neighbors = Gameboard.NEIGHBORS_8
 
   const selfTable = document.querySelector('.battlefield_self .battlefield_table')
   const rivalTable = document.querySelector('.battlefield_rival .battlefield_table')
@@ -43,7 +44,7 @@ async function init() {
   rivalTable.classList.add('battlefield_table__disabled')
 
   const dom = { selfTable, rivalTable, selfStat, rivalStat, startBtn, leaveBtn, placeships, root: document.body }
-  const deps = { game, bfStyles, dom, utils: { delay, minMovesToWin }, n10n }
+  const deps = { game, bfStyles, dom, utils: { delay, minMovesToWin, neighbors, getCells }, n10n }
   const {
     playSelf,
     handleLeave,
@@ -53,9 +54,11 @@ async function init() {
     onRandomise,
     onReset,
     withClickSound,
+    handleDrag,
   } = createHandlers(deps)
 
-  game.start()
+  game.self.board.populate()
+  game.rival.board.populate()
 
   self.board.render({ container: selfTable, statContainer: selfStat })
   rival.board.render({ container: rivalTable, showShips: false, statContainer: rivalStat })
@@ -68,6 +71,10 @@ async function init() {
   )
   updateGamePrefsUI(settings, game.PREFS)
 
+  selfTable.addEventListener('dragstart', errorHandler(handleDrag, n10n))
+  selfTable.addEventListener('dragend', errorHandler(handleDrag, n10n))
+  selfTable.addEventListener('dragover', errorHandler(handleDrag, n10n))
+  selfTable.addEventListener('drop', errorHandler(handleDrag, n10n))
   rivalTable.addEventListener('click', errorHandler(playSelf, n10n))
   leaveBtn.addEventListener('click', errorHandler(withClickSound(handleLeave), n10n))
   startBtn.addEventListener('click', errorHandler(withClickSound(handleStart), n10n))
@@ -96,5 +103,3 @@ window.addEventListener('unhandledrejection', (e) => {
 })
 
 errorHandler(init)()
-
-// TODO: drag-n-drop

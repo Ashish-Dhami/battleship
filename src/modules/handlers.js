@@ -1,8 +1,13 @@
+import { createDragHandlers } from 'Modules'
+
 export default function createHandlers({ game, bfStyles, dom, utils, n10n }) {
   const { selfTable, rivalTable, selfStat, rivalStat, startBtn, leaveBtn, placeships } = dom
 
+  const dragDeps = { game, bfStyles, root: dom.root, utils }
+  const { handleDrag } = createDragHandlers(dragDeps)
+
   function playComputer() {
-    if (game.ended || game.activePlayer !== game.rival) return 'stop'
+    if (!game.inProgress || game.activePlayer !== game.rival) return 'stop'
 
     const [row, col] = game.rival.chooseMove()
     const result = game.self.board.receiveAttack({ row, col }, game.PREFS.shootHint)
@@ -34,8 +39,11 @@ export default function createHandlers({ game, bfStyles, dom, utils, n10n }) {
     let notifyType = 'MOVE_ON'
 
     while (game.activePlayer === game.rival) {
-      await utils.delay(1000)
+      const delay = 700 + Math.random() * 250
+      await utils.delay(delay)
+
       const outcome = playComputer()
+
       if (['stop', 'end', 'miss'].includes(outcome)) {
         if (outcome === 'end') notifyType = 'OVER_LOSE'
         break
@@ -46,7 +54,7 @@ export default function createHandlers({ game, bfStyles, dom, utils, n10n }) {
   }
 
   async function playSelf(e) {
-    if (game.ended || game.activePlayer !== game.self) return
+    if (!game.inProgress || game.activePlayer !== game.self) return
 
     const cellEl = e.target.closest(`.${bfStyles.battlefield_cell__content}`)
     if (!cellEl) return
@@ -93,6 +101,7 @@ export default function createHandlers({ game, bfStyles, dom, utils, n10n }) {
 
   function handleStart() {
     game.playSound('GAME_STARTED')
+    game.start()
     rivalTable.classList.remove('battlefield_table__disabled')
     selfTable.classList.add('battlefield_table__disabled')
     startBtn.parentElement.classList.add('none')
@@ -149,5 +158,6 @@ export default function createHandlers({ game, bfStyles, dom, utils, n10n }) {
     onRandomise,
     onReset,
     withClickSound,
+    handleDrag,
   }
 }

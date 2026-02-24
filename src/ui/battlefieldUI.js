@@ -43,15 +43,14 @@ export function renderBoard(container, board, showShips) {
         const isOrigin = i === cell.ship.origin.row && j === cell.ship.origin.col
         if ((showShips || cell.ship.isSunk()) && isOrigin) {
           const shipBox = document.createElement('div')
-          shipBox.classList.add(styles.shipBox)
+          shipBox.classList.add(styles.shipBox, styles.ui_draggable)
+          shipBox.draggable = true
           shipBox.dataset.id = cell.ship.id
-          shipBox.dataset.length = cell.ship.len
-          const { align } = cell.ship
-          shipBox.dataset.align = align
           shipBox.style.width =
-            align === 'h' ? `calc(${cell.ship.len * 2.125}rem + ${cell.ship.len - 1}px)` : '2.125rem'
+            cell.ship.align === 'h' ? `calc(${cell.ship.len * 2.125}rem + ${cell.ship.len - 1}px)` : '2.125rem'
           shipBox.style.height =
-            align === 'v' ? `calc(${cell.ship.len * 2.125}rem + ${cell.ship.len - 1}px)` : '2.125rem'
+            cell.ship.align === 'v' ? `calc(${cell.ship.len * 2.125}rem + ${cell.ship.len - 1}px)` : '2.125rem'
+
           div.appendChild(shipBox)
         }
         if (showShips) {

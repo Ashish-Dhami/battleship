@@ -1,5 +1,5 @@
 import { Ship } from 'Components'
-import { rand } from 'Utils'
+import { rand, getCells } from 'Utils'
 import { renderBoard, renderStats } from 'UI'
 
 export default class Gameboard {
@@ -28,6 +28,18 @@ export default class Gameboard {
     return this.#SHIPS_META.reduce((moves, ship) => moves + ship.length * ship.count, 0)
   }
 
+  static NEIGHBORS_8 = [
+    [-1, -1],
+    [-1, 0],
+    [-1, 1],
+    [0, -1],
+    [0, 0],
+    [0, 1],
+    [1, -1],
+    [1, 0],
+    [1, 1],
+  ]
+
   #createBoard() {
     return Array.from({ length: this.#size }, () =>
       Array.from({ length: this.#size }, () => ({
@@ -38,23 +50,23 @@ export default class Gameboard {
     )
   }
 
-  #isPlacementValid(length, align, { row, col }) {
-    for (let i = 0; i < length; i++) {
-      const r = align === 'v' ? row + i : row
-      const c = align === 'h' ? col + i : col
-      if (
-        this.value[r]?.[c]?.ship ||
-        this.value[r + 1]?.[c]?.ship ||
-        this.value[r - 1]?.[c]?.ship ||
-        this.value[r]?.[c + 1]?.ship ||
-        this.value[r]?.[c - 1]?.ship ||
-        this.value[r - 1]?.[c - 1]?.ship ||
-        this.value[r + 1]?.[c + 1]?.ship ||
-        this.value[r + 1]?.[c - 1]?.ship ||
-        this.value[r - 1]?.[c + 1]?.ship
-      )
-        return false
+  #isPlacementValid(length, align, coords) {
+    const cells = getCells(coords.row, coords.col, length, align)
+
+    for (const { row, col } of cells) {
+      for (const [dr, dc] of Gameboard.NEIGHBORS_8) {
+        const r = row + dr
+        const c = col + dc
+
+        if (r < 0 || r >= this.#size || c < 0 || c >= this.#size) continue
+
+        const { ship } = this.value[r][c]
+        if (ship) {
+          return false
+        }
+      }
     }
+
     return true
   }
 

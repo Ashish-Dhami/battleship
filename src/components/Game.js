@@ -21,7 +21,7 @@ export default class Game {
     this.self = self
     this.rival = rival
     this.#activePlayer = this.self
-    this.ended = false
+    this.inProgress = false
     this.#initializePrefs()
   }
 
@@ -53,12 +53,11 @@ export default class Game {
   }
 
   start() {
-    this.self.board.populate()
-    this.rival.board.populate()
+    this.inProgress = true
   }
 
   end(gameBody) {
-    this.ended = true
+    this.inProgress = false
     gameBody.classList.add('body__game_over')
   }
 
@@ -66,7 +65,7 @@ export default class Game {
     this.self.reset()
     this.rival.reset()
     this.#activePlayer = this.self
-    this.ended = false
+    this.inProgress = false
     gameBody.classList.remove('body__game_over')
   }
 
