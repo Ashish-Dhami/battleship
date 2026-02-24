@@ -1,8 +1,7 @@
 .placeships_variant {
   display: inline-block;
-  margin-right: 2em;
   margin-bottom: 1em;
-  top: 4em;
+  top: 3.5em;
   padding-right: 22px;
   position: relative;
 }
@@ -36,12 +35,4 @@
 
 .placeships_variant__randomly .placeships_variant__link:hover::after {
   background-position: 0 -20px;
-}
-
-.placeships_variant__hands .placeships_variant__link::after {
-  background-position: -30px 0;
-}
-
-.placeships_variant__hands .placeships_variant__link:hover::after {
-  background-position: -30px -20px;
 }

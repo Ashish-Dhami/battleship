@@ -52,7 +52,6 @@ async function init() {
     handleRestart,
     handleSettingsChange,
     onRandomise,
-    onReset,
     withClickSound,
     handleDrag,
   } = createHandlers(deps)
@@ -64,11 +63,7 @@ async function init() {
   rival.board.render({ container: rivalTable, showShips: false, statContainer: rivalStat })
   renderPlayerLabel(selfLabelComment, self)
   renderPlayerLabel(rivalLabelComment, rival)
-  renderPlaceships(
-    placeships,
-    errorHandler(withClickSound(onRandomise), n10n),
-    errorHandler(withClickSound(onReset), n10n)
-  )
+  renderPlaceships(placeships, errorHandler(withClickSound(onRandomise), n10n))
   updateGamePrefsUI(settings, game.PREFS)
 
   selfTable.addEventListener('dragstart', errorHandler(handleDrag, n10n))

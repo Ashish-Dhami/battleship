@@ -138,10 +138,6 @@ export default function createHandlers({ game, bfStyles, dom, utils, n10n }) {
     game.self.board.render({ container: selfTable })
   }
 
-  function onReset() {
-    alert('reset')
-  }
-
   function withClickSound(handler) {
     return (e) => {
       game.playSound('CLICK')
@@ -156,7 +152,6 @@ export default function createHandlers({ game, bfStyles, dom, utils, n10n }) {
     handleRestart,
     handleSettingsChange,
     onRandomise,
-    onReset,
     withClickSound,
     handleDrag,
   }
