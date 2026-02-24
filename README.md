@@ -8,6 +8,7 @@ logic, and maintainable code—without frameworks.
 ## Features
 
 - Player vs Computer gameplay
+- Drag-and-drop ship placement (reposition ships before game start)
 - Intelligent computer moves with hit-based logic
 - Modular, object-oriented design
 - Persistent user preferences (sound, hints)
@@ -43,6 +44,7 @@ src/
 
 - Structuring a medium-sized app without frameworks
 - Managing turn-based game state cleanly
+- Implementing drag-and-drop interactions using native browser APIs
 - Writing basic AI logic with performance considerations
 - Using browser APIs for persistence and sound
 - Separating game logic from UI code
